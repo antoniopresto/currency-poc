@@ -23,7 +23,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": [
-    "my-vue-app/src"
-  ]
+  "include": ["my-vue-app/src"]
 }
