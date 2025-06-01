@@ -2,10 +2,9 @@ import { styled } from '@linaria/react';
 import cx from 'clsx';
 
 import getSymbolFromCurrency from 'currency-symbol-map';
-import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 
 import { useMemo } from 'react';
-import MaskedInput from 'react-text-mask';
+import CurrencyInput from 'react-currency-input-field';
 import {
   CurrencySelection,
   currencySelectorHelpers,
@@ -21,12 +20,16 @@ const Wrapper = styled.div`
   overflow: hidden;
 
   &:focus-within {
-    box-shadow: 0 0 0 1px var(--pico-form-element-active-border-color);
+    box-shadow:
+      0 0 0 1px rgba(50, 151, 211, 0.7),
+      0 1px 1px 0 rgba(0, 0, 0, 0.07),
+      0 0 0 4px rgba(50, 151, 211, 0.3);
   }
 
   input,
   select {
     --pico-border-color: transparent;
+    --pico-background-color: #f2f2f2;
     &:focus {
       outline: none;
       box-shadow: none;
@@ -36,12 +39,14 @@ const Wrapper = styled.div`
 
   select {
     max-width: 150px;
+    background: #e8e4e4;
+    border-radius: 0 var(--pico-border-radius) var(--pico-border-radius) 0;
   }
 
   input {
-    margin-right: -16px;
     max-width: 180px;
     z-index: 2;
+    border-radius: var(--pico-border-radius) 0 0;
   }
 `;
 
@@ -50,27 +55,41 @@ export function CurrencyValueSelector(props: CurrencyValueSelectorProps) {
     className,
     onChange,
     value: selectedOption = currencySelectorHelpers.defaultValue,
+    loading,
+    convertedAmount,
+    origin,
   } = props;
 
-  const mask = useMemo(() => {
-    return createNumberMask({
-      prefix: getSymbolFromCurrency(selectedOption.code),
-      allowDecimal: true,
-      allowNegative: true,
-      includeThousandsSeparator: false,
-      suffix: '',
-    });
+  const value = (() => {
+    const v = origin ? selectedOption.amount : convertedAmount;
+    if (v === '') return '0.00';
+    if (v === '0') return '0.00';
+    return v;
+  })();
+
+  const symbol = useMemo(() => {
+    return getSymbolFromCurrency(selectedOption.code);
   }, [selectedOption.code]);
 
   return (
-    <Wrapper className={cx('CurrencyValueSelector', className)}>
-      <MaskedInput
-        mask={mask}
+    <Wrapper
+      className={cx('CurrencyValueSelector', className, { loading, origin })}
+    >
+      <CurrencyInput
+        className="CurrencyInput"
         placeholder="0.00"
+        prefix={symbol}
         aria-label="Value"
-        onChange={(event) => {
-          let amount = event.currentTarget.value;
-          onChange({ ...selectedOption, amount });
+        defaultValue={'1.00'}
+        value={value}
+        disableGroupSeparators
+        allowDecimals
+        onFocus={(ev) => {
+          ev.currentTarget.selectionStart = 0;
+          ev.currentTarget.selectionEnd = 1000;
+        }}
+        onValueChange={(value = '') => {
+          onChange({ ...selectedOption, amount: value }, 'amount');
         }}
       />
 
@@ -82,7 +101,7 @@ export function CurrencyValueSelector(props: CurrencyValueSelectorProps) {
           ev.preventDefault();
           const code = ev.currentTarget.value;
           const currency = currencySelectorHelpers.currencyByCode[code];
-          onChange({ ...currency, amount: selectedOption.amount });
+          onChange({ ...currency, amount: value }, 'currency');
         }}
       >
         <option disabled value="">
@@ -104,7 +123,9 @@ export function CurrencyValueSelector(props: CurrencyValueSelectorProps) {
 
 export type CurrencyValueSelectorProps = {
   className?: string;
-  value?: CurrencySelection;
-  onChange(currency: CurrencySelection): void;
-  name?: string;
+  value: CurrencySelection;
+  onChange(currency: CurrencySelection, changed: 'currency' | 'amount'): void;
+  loading: boolean;
+  origin: boolean;
+  convertedAmount: string;
 };

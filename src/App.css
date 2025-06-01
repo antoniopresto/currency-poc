@@ -1,12 +1,3 @@
-:root {
-  --spacing-01: 6px;
-  --spacing-02: 12px;
-  --spacing-03: 18px;
-
-  --rounding: var(--spacing-01);
-  --border-color: rgba(126, 126, 126, 0.25);
-}
-
 #root {
   margin: 0 auto;
 }

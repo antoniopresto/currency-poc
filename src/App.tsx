@@ -13,9 +13,11 @@ const Wrapper = styled.div`
 
 function App() {
   return (
-    <Wrapper>
-      <CurrencyConverter />
-    </Wrapper>
+    <>
+      <Wrapper>
+        <CurrencyConverter />
+      </Wrapper>
+    </>
   );
 }
 

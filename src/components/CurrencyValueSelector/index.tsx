@@ -1,1 +1,4 @@
-export * from './CurrencyValueSelector';
+export {
+  CurrencyValueSelector,
+  type CurrencyValueSelectorProps,
+} from './CurrencyValueSelector';

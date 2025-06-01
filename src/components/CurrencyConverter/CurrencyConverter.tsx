@@ -1,40 +1,46 @@
 import { styled } from '@linaria/react';
 import cx from 'clsx';
 import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
+import logo from '../../assets/x.svg';
 import { currencySelectorHelpers } from '../../utils/currency';
+import { useCurrencyConverter } from '../../utils/useCurrencyConverter.tsx';
 import { CurrencyValueSelector } from '../CurrencyValueSelector';
 
 const CurrencyConverterWrapper = styled.div`
-  width: 100%;
-  min-height: 300px;
-  max-width: 600px;
-  background: var(--pico-color-grey-300);
   border-radius: var(--rounding);
 `;
 
-const Container = styled.div`
+const Container = styled.article`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  padding: var(--spacing-03);
-  gap: var(--spacing-03);
+  padding: var(--spacing-02);
+  gap: var(--spacing-02);
+  border-radius: 16px;
 `;
 
-const Hero = styled.header`
+const Header = styled.header`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: flex-start;
-  justify-content: flex-start;
+  justify-content: center;
   width: 100%;
-  color: #1a1a1a;
-  > h1 {
-    font-size: 1.8rem;
-    width: 100%;
-    text-align: center;
-  }
+  padding: var(--spacing-03) var(--spacing-03);
+  margin-bottom: 1rem;
+`;
+
+const Logo = styled.h1`
+  background-image: url('${logo}');
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 24px;
+  padding-left: 39px;
+  font-size: 14px;
+  line-height: 25px;
+  color: rgba(10, 16, 55, 0.7);
 `;
 
 export function CurrencyConverter(props: CurrencyConverterProps) {
@@ -43,40 +49,40 @@ export function CurrencyConverter(props: CurrencyConverterProps) {
   const [valueA, setValueA] = useState(currencySelectorHelpers.defaultValue);
   const [valueB, setValueB] = useState(currencySelectorHelpers.defaultValueAlt);
   const [lastChanged, setLastChanged] = useState<'a' | 'b'>('a');
-  const lastChangedRef = useRef(lastChanged);
+  const inverted = lastChanged === 'b';
 
-  useEffect(() => {
-    if (lastChangedRef.current === lastChanged) return;
-    lastChangedRef.current = lastChanged;
-    if (valueA.code === valueB.code) return;
-
-    if (lastChangedRef.current === 'a') {
-      // setValueB()
-    } else {
-      // setValueA()
-    }
-  }, [lastChanged]);
+  const { convertedAmount, loading } = useCurrencyConverter(
+    inverted ? +valueB.amount : +valueA.amount,
+    inverted ? valueB.code : valueA.code,
+    inverted ? valueA.code : valueB.code,
+  );
 
   return (
     <CurrencyConverterWrapper className={cx('CurrencyConverter', className)}>
-      <Hero>
-        <h1>Currency converter</h1>
-      </Hero>
+      <Header>
+        <Logo title={'Logotype Currency Converter'}> ❘ Currency Converter</Logo>
+      </Header>
 
-      <Container>
+      <Container className={cx({ inverted })}>
         <CurrencyValueSelector
+          loading={loading}
+          convertedAmount={convertedAmount}
+          origin={!inverted}
           value={valueA}
-          onChange={(value) => {
+          onChange={(value, changed) => {
             setValueA(value);
-            setLastChanged('a');
+            if (changed === 'amount') setLastChanged('a');
           }}
         />
 
         <CurrencyValueSelector
+          loading={loading}
+          convertedAmount={convertedAmount}
+          origin={inverted}
           value={valueB}
-          onChange={(value) => {
+          onChange={(value, changed) => {
             setValueB(value);
-            setLastChanged('b');
+            if (changed === 'amount') setLastChanged('b');
           }}
         />
       </Container>

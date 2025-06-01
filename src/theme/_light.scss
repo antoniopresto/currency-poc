@@ -1,0 +1,24 @@
+@use '@picocss/pico/scss/settings' as *;
+@use '@picocss/pico/scss/themes/default/styles';
+@use '@picocss/pico/scss/themes/default/light';
+@use '@picocss/pico/scss/colors/utilities';
+
+$theme-color: 'grey';
+$css-class-prefix: 'cc-';
+
+:root,
+:host {
+  @include light.theme;
+
+  --pico-form-element-active-border-color: transparent;
+  --pico-form-element-spacing-vertical: 8px;
+  --pico-form-element-spacing-horizontal: 12px;
+  --pico-text-selection-color: rgba(1, 205, 65, 0.3);
+}
+
+#{$parent-selector} progress,
+#{$parent-selector} [type='checkbox'],
+#{$parent-selector} [type='radio'],
+#{$parent-selector} [type='range'] {
+  accent-color: var(#{$css-var-prefix}primary);
+}

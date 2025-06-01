@@ -1,0 +1,91 @@
+@use '@picocss/pico/scss/pico' with (
+  $enable-semantic-container: true,
+  $enable-classes: true,
+
+  $modules: (
+    // Theme
+    'themes/default': false,
+    'colors/utilities': true,
+
+    // Layout
+    'layout/document': true,
+    'layout/landmarks': true,
+    'layout/container': true,
+    'layout/section': true,
+    'layout/grid': true,
+    'layout/overflow-auto': true,
+
+    // Content
+    'content/link': true,
+    'content/typography': true,
+    'content/embedded': true,
+    'content/button': true,
+    'content/table': false,
+    'content/code': false,
+    'content/figure': false,
+    'content/misc': false,
+
+    // Forms
+    'forms/basics': true,
+    'forms/checkbox-radio-switch': false,
+    'forms/input-color': false,
+    'forms/input-date': false,
+    'forms/input-file': false,
+    'forms/input-range': false,
+    'forms/input-search': false,
+
+    // Components
+    'components/accordion': false,
+    'components/card': true,
+    'components/dropdown': false,
+    'components/group': false,
+    'components/loading': false,
+    'components/modal': false,
+    'components/nav': false,
+    'components/progress': false,
+    'components/tooltip': false,
+
+    // Utilities
+    'utilities/accessibility': true,
+    'utilities/reduce-motion': true,
+  )
+);
+
+@use './light';
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --spacing-01: 6px;
+  --spacing-02: 12px;
+  --spacing-03: 18px;
+  --rounding: var(--spacing-01);
+}
+
+input,
+select,
+textarea {
+  transition:
+    background-color var(--pico-transition),
+    color var(--pico-transition),
+    box-shadow var(--pico-transition);
+}
+
+input:not(
+    [type='submit'],
+    [type='button'],
+    [type='reset'],
+    [role='switch'],
+    [readonly]
+  ):is(:active, :focus),
+:where(select, textarea):not([readonly]):is(:active, :focus) {
+  --pico-form-element-active-border-color: transparent;
+  --pico-box-shadow: transparent;
+}

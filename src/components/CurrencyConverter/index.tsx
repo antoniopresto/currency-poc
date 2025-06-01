@@ -1,1 +1,4 @@
-export * from './CurrencyConverter';
+export {
+  CurrencyConverter,
+  type CurrencyConverterProps,
+} from './CurrencyConverter';

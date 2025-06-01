@@ -25,7 +25,7 @@ export function formatCurrency(input: FormatCurrencyInput) {
 }
 
 const currencies = [
-  // Fiat Currencies (ISO 4217)
+  { code: 'BRL', emoji: '🇧🇷', label: 'Brazilian Real' },
   { code: 'USD', emoji: '🇺🇸', label: 'US Dollar' },
   { code: 'EUR', emoji: '🇪🇺', label: 'Euro' },
   { code: 'JPY', emoji: '🇯🇵', label: 'Japanese Yen' },
@@ -40,7 +40,7 @@ const currencies = [
   { code: 'NZD', emoji: '🇳🇿', label: 'New Zealand Dollar' },
   { code: 'KRW', emoji: '🇰🇷', label: 'South Korean Won' },
   { code: 'INR', emoji: '🇮🇳', label: 'Indian Rupee' },
-  { code: 'BRL', emoji: '🇧🇷', label: 'Brazilian Real' },
+
   { code: 'MXN', emoji: '🇲🇽', label: 'Mexican Peso' },
   { code: 'RUB', emoji: '🇷🇺', label: 'Russian Ruble' },
   { code: 'ZAR', emoji: '🇿🇦', label: 'South African Rand' },
